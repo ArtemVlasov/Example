@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name ="viewport"
+          content ="width=device-width, user-scalable-no,initial-scale=1.0, maximum-scale=1.0, minimun-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="app.css">
+    <title>VueJs</title>
+</head>
+<body>
+
+<div class="container pt-5" id="app">
+    <div class="row mb-3">
+        <h1>Warhammer</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+              <label for="search">Find your miniature</label>
+              <input type="text" class="form-control" id="search" placeholder="Army, model...">
+          </div>
+
+            <hr>
+
+            <ul class="list-group">
+                <li
+                        v-for="(minis,index) of miniatures"
+                        class="list-group-item list-group-item-action pointer"
+                        v-on:click="selectCar(index)"
+                        :class="{'active': selectedMinisIndex === index}"
+                >
+                    {{ minis.name }}-  {{ minis.model }}
+                </li>
+
+
+            </ul>
+        </div>
+
+        <div class="col-md-8 pt-3">
+            <div class="row">
+                <div class="col-mb-5">
+                    <h2>{{minis.name}}</h2>
+                    <img
+                           :src="minis.image"
+                           :alt="minis.name"
+                            class="rounded detail-miniature-image">
+                </div>
+
+                <div class="col-mb-7 pt-5">
+                    <h5>Miniatures details</h5>
+
+                    <ul>
+                        <li>Model- <strong>{{minis.name}}</strong></li>
+                        <li>Army- <strong>{{minis.model}}</strong></li>
+                        <li>Owner- <strong>{{minis.owner}}</strong></li>
+
+                    </ul>
+
+                    <p v-if="phoneVisibility">{{minis.phone}}</p>
+
+                    <button class="btn btn-outline-success mr-3" v-on:click="phoneVisibility =true">Show phone number</button>
+                   <button class="btn btn-primary">Buy</button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+<script src="app.js"></script>
+
+
+</body>
+</html>
