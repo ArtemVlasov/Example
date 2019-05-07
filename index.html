@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name ="viewport"
@@ -19,14 +19,21 @@
         <div class="col-md-4">
           <div class="form-group">
               <label for="search">Find your miniature</label>
-              <input type="text" class="form-control" id="search" placeholder="Army, model...">
+              <input
+                      type="text"
+                      class="form-control"
+                      id="search"
+                      placeholder="Army, model..."
+                      v-model="search"
+
+              >
           </div>
 
             <hr>
 
             <ul class="list-group">
                 <li
-                        v-for="(minis,index) of miniatures"
+                        v-for="(minis,index) of filtredMinis"
                         class="list-group-item list-group-item-action pointer"
                         v-on:click="selectCar(index)"
                         :class="{'active': selectedMinisIndex === index}"
@@ -57,17 +64,99 @@
                         <li>Owner- <strong>{{minis.owner}}</strong></li>
 
                     </ul>
+                    <div class="phone-block">
+                        <transition name="phone">
+                        <p v-if="phoneVisibility">{{minis.phone}}</p>
+                        </transition>
+                    </div>
 
-                    <p v-if="phoneVisibility">{{minis.phone}}</p>
 
-                    <button class="btn btn-outline-success mr-3" v-on:click="phoneVisibility =true">Show phone number</button>
-                   <button class="btn btn-primary">Buy</button>
+                    <button
+                            class="btn btn-outline-success mr-3"
+                            v-on:click="phoneVisibility =!phoneVisibility"
+                            v-text="phoneBtnText"
+                    ></button>
+                   <button class="btn btn-primary" @click="modalVisibility = true">Buy</button>
 
                 </div>
 
             </div>
         </div>
     </div>
+
+    <div class="row pt-3" v-if="logs.length!== 0">
+        <div class="col-md-12 ">
+            <ul class="list-group">
+                <li
+                        v-for="log in logs"
+                        class="list-group-item "
+                        :class="{
+                        'list-group-item-secondary': log.type === 'cnl',
+                        'list-group-item-success': log.type === 'ok'
+                        }"
+                >
+                    {{ log.text }} {{ log.date | date }}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+
+    <transition name="modal">
+       <div class="modal fade show" v-if="modalVisibility" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Do you want to buy this minis? </h5>
+                    <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                            @click="modalVisibility =  false"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Current minis -<strong>{{ minis.name }} </p>
+
+                    <ul>
+                        <li>Model- <strong>{{minis.name}}</strong></li>
+                        <li>Army- <strong>{{minis.model}}</strong></li>
+                        <li>Owner- <strong>{{minis.owner}}</strong></li>
+
+                    </ul>
+
+                </div>
+                <div class="modal-footer">
+                    <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                            @click="cancelOrder"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="newOrder"
+                    >
+                        Buy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </transition>
+
+    <transition name="fade">
+    <div class="modal-backdrop fade show" v-if="modalVisibility"></div>
+    </transition>
+
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
